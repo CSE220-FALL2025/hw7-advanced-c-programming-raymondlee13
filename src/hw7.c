@@ -3,6 +3,9 @@
 //CSE 220 - HW7
 
 #include "hw7.h"
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 
 bst_sf* insert_bst_sf(matrix_sf *mat, bst_sf *root) {
     if (!mat) 
@@ -106,6 +109,7 @@ matrix_sf* add_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
     }
 
     return out;
+}
 
 matrix_sf* mult_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
     unsigned int r1 = mat1->num_rows;
@@ -175,26 +179,26 @@ matrix_sf* transpose_mat_sf(const matrix_sf *mat) {
 matrix_sf* create_matrix_sf(char name, const char *expr) {
     const char *p = expr;
 
-    #define SKIP_SPACE() 
-        while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
-            ++p
-
-    SKIP_SPACE();
+    while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+        ++p;
 
     char *end = NULL;
     unsigned long ur = strtoul(p, &end, 10);
     p = end;
 
-    SKIP_SPACE();
+    while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+        ++p;
 
     unsigned long uc = strtoul(p, &end, 10);
     p = end;
 
-    SKIP_SPACE();
+    while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+        ++p;
 
     ++p;
 
-    SKIP_SPACE();
+    while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+        ++p;
 
     unsigned int num_rows = (unsigned int)ur;
     unsigned int num_cols = (unsigned int)uc;
@@ -212,19 +216,22 @@ matrix_sf* create_matrix_sf(char name, const char *expr) {
     {
         for (unsigned int c = 0; c < num_cols; ++c)
         {
-            SKIP_SPACE();
+            while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+                ++p;
             long v = strtol(p, &end, 10);
             p = end;
 
             m->values[(size_t)r * num_cols + c] = (int)v;
         }
-        SKIP_SPACE();
+        while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+            ++p;
         ++p;
-        SKIP_SPACE();
+        while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+            ++p;
     }
-     SKIP_SPACE();
-     #undef SKIP_SPACE
-     return m;
+    while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+        ++p;
+    return m;
 }
 
 char* infix2postfix_sf(char *infix) {
@@ -243,15 +250,6 @@ char* infix2postfix_sf(char *infix) {
         return NULL; 
     }
     int top = -1;
-
-    auto int prec(char op)
-    {
-        if (op == '+')
-            return 1;
-        if (op == '*')
-            return 2;
-        return -1;
-    }
 
     size_t k = 0;
 
@@ -286,16 +284,29 @@ char* infix2postfix_sf(char *infix) {
         }
         else if (ch == '+' || ch == '*')
         {
-            while (top >= 0 && ops[top] != '(' && prec(ops[top]) >= prec(ch))
+            int new_prec;
+            if (ch == '+')
             {
-                out[k++] = ops[top--];
+                new_prec = 1;
             }
-            ops[++top] = ch;
-        }
-        else
-        {
+            else
+            {
+            new_prec = 2;
+            }
 
+            while (top >= 0 && ops[top] != '(') {
+            int top_prec = -1;
+            if (ops[top] == '+')
+                top_prec = 1;
+            else if (ops[top] == '*')
+                top_prec = 2;
+
+            if (top_prec >= new_prec)
+                out[k++] = ops[top--];
+            else
+                break;
         }
+        ops[++top] = ch;
     }
     while (top >= 0)
     {
@@ -411,32 +422,32 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
         {
             continue;
         }
+    }
+    matrix_sf *result = NULL;
+    if (top >= 0)
+    {
+        result = stack[top];
+        top -= 1;
+    }
 
-        matrix_sf *result = NULL;
-        if (top >= 0)
+    while (top >= 0)
+    {
+        matrix_sf *m = stack[top];
+        if (m && !(m->name >= 'A' && m->name <= 'Z'))
         {
-            result = stack[top];
-            top -= 1;
+            free(m);
         }
+        top -= 1;
+    }
 
-        while (top >= 0)
-        {
-            matrix_sf *m = stack[top];
-            if (m && !(m->name >= 'A' && m->name <= 'Z'))
-            {
-                free(m);
-            }
-            top -= 1;
-        }
+    free(postfix);
+    free(stack);
 
-        free(postfix);
-        free(stack);
+    if (!result)
+        return NULL;
 
-        if (!result)
-            return NULL;
-
-        result->name = name;
-        return result;
+    result->name = name;
+    return result;
 }
 
 matrix_sf *execute_script_sf(char *filename) {
@@ -468,10 +479,13 @@ matrix_sf *execute_script_sf(char *filename) {
         char name = *p;
         while (*p && *p != '=')
             ++p;
+
         if (!*p)
             continue;
+        ++p;
 
-        while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') ++p;
+        while (*p==' ' || *p=='\t' || *p=='\n' || *p=='\r' || *p=='\f' || *p=='\v') 
+            ++p;
 
         char *rhs = (char *)p;
 

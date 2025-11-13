@@ -9,6 +9,18 @@
 #include <string.h>
 #include <assert.h>
 
+static void free_bst_excluding(bst_sf *root, const matrix_sf *keep) {
+    if (!root)
+        return;
+    free_bst_excluding(root->left_child, keep);
+    free_bst_excluding(root->right_child, keep);
+    if (root->mat && root->mat != keep)
+    {
+        free(root->mat);
+    }
+    free(root);
+}
+
 bst_sf* insert_bst_sf(matrix_sf *mat, bst_sf *root) {
     if (!mat) 
         return root;
@@ -530,6 +542,7 @@ matrix_sf *execute_script_sf(char *filename) {
         free(line);
     fclose(fp);
 
+    free_bst_excluding(root, last);
     return last;
 }
 

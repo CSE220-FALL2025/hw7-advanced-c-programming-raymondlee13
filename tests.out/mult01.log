@@ -1,0 +1,13 @@
+==18891== Memcheck, a memory error detector
+==18891== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==18891== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==18891== Command: ./bin/mult01
+==18891== 
+==18891== 
+==18891== HEAP SUMMARY:
+==18891==     in use at exit: 0 bytes in 0 blocks
+==18891==   total heap usage: 3 allocs, 3 frees, 412 bytes allocated
+==18891== 
+==18891== All heap blocks were freed -- no leaks are possible
+==18891== 
+==18891== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

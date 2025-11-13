@@ -92,7 +92,7 @@ matrix_sf* add_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
     unsigned int rows = mat1->num_rows;
     unsigned int cols = mat1->num_cols;
 
-    size_t n = size_t(rows) * size_t(cols);
+    size_t n = (size_t)rows * (size_t)cols;
     matrix_sf *out = malloc(sizeof(matrix_sf) + n * sizeof(int));
     if (!out)
         return NULL;
@@ -281,7 +281,7 @@ char* infix2postfix_sf(char *infix) {
             }
             if (top >= 0 && ops[top] == '(')
             {
-                --top
+                --top;
             }
         }
         else if (ch == '+' || ch == '*')
@@ -309,11 +309,11 @@ char* infix2postfix_sf(char *infix) {
 
 matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
     if (!expr)
-        return null;
+        return NULL;
 
     char *postfix = infix2postfix_sf(expr);
     if (!postfix)
-        return null;
+        return NULL;
 
     size_t n = strlen(postfix);
     matrix_sf **stack = (matrix_sf **)malloc((n + 1) * sizeof(matrix_sf *));
@@ -334,14 +334,20 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
         if (ch >= 'A' && ch <= 'Z')
         {
             matrix_sf *m = find_bst_sf(ch, root);
-            if (!m) { free(postfix); free(stack); return NULL; }
+            if (!m)
+            {
+                free(postfix);
+                free(stack);
+                return NULL;
+            }
             stack[++top] = m;
         }
         else if (ch == '\'')
         {
             if (top < 0)
             {
-                free(postfix); free(stack);
+                free(postfix);
+                free(stack);
                 return NULL;
             }
             matrix_sf *a = stack[top--];
@@ -527,10 +533,14 @@ void print_matrix_sf(matrix_sf *mat) {
     assert(mat->num_rows <= 1000);
     assert(mat->num_cols <= 1000);
     printf("%d %d ", mat->num_rows, mat->num_cols);
-    for (unsigned int i = 0; i < mat->num_rows*mat->num_cols; i++) {
+    for (unsigned int i = 0; i < mat->num_rows*mat->num_cols; i++)
+    {
         printf("%d", mat->values[i]);
         if (i < mat->num_rows*mat->num_cols-1)
             printf(" ");
     }
     printf("\n");
+    
+}
+
 }

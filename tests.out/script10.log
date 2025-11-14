@@ -1,0 +1,14 @@
+==2452== Memcheck, a memory error detector
+==2452== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==2452== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==2452== Command: ./bin/execute_script script10
+==2452== 
+5 5 6264 -25436 10326 15774 23091 156 -31252 19633 -7047 15344 51308 2268 -12862 7573 -7087 45722 14780 41569 -7283 8815 22125 14915 23325 -6118 -1202
+==2452== 
+==2452== HEAP SUMMARY:
+==2452==     in use at exit: 0 bytes in 0 blocks
+==2452==   total heap usage: 17 allocs, 17 frees, 9,782 bytes allocated
+==2452== 
+==2452== All heap blocks were freed -- no leaks are possible
+==2452== 
+==2452== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

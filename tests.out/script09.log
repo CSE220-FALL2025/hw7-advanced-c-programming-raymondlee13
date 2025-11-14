@@ -1,0 +1,14 @@
+==2585== Memcheck, a memory error detector
+==2585== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==2585== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==2585== Command: ./bin/execute_script script09
+==2585== 
+6 2 33 -6 -22 123 -36 47 63 -127 -65 -142 53 52
+==2585== 
+==2585== HEAP SUMMARY:
+==2585==     in use at exit: 0 bytes in 0 blocks
+==2585==   total heap usage: 12 allocs, 12 frees, 9,054 bytes allocated
+==2585== 
+==2585== All heap blocks were freed -- no leaks are possible
+==2585== 
+==2585== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -1,0 +1,14 @@
+==2540== Memcheck, a memory error detector
+==2540== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==2540== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==2540== Command: ./bin/execute_script script19
+==2540== 
+6 2 33 -6 -22 123 -36 47 63 -127 -65 -142 53 52
+==2540== 
+==2540== HEAP SUMMARY:
+==2540==     in use at exit: 0 bytes in 0 blocks
+==2540==   total heap usage: 16 allocs, 16 frees, 9,100 bytes allocated
+==2540== 
+==2540== All heap blocks were freed -- no leaks are possible
+==2540== 
+==2540== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
